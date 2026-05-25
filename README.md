@@ -11,6 +11,7 @@ Upload your CV and get currently available job vacancies ranked by relevance.
 - Cleans HTML-heavy job descriptions for better readability and ranking
 - Ranks vacancies against your CV using TF-IDF + cosine similarity
 - Shows top matched jobs with direct links
+- Provides a downloadable CSV of ranked matches
 
 ## Setup
 ```bash

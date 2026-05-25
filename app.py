@@ -148,6 +148,22 @@ def fallback_jobs() -> List[Job]:
     ]
 
 
+
+def jobs_to_csv(ranked_jobs: List[tuple[Job, float]]) -> str:
+    rows = ["rank,title,company,location,source,match_score,url"]
+    for idx, (job, score) in enumerate(ranked_jobs, start=1):
+        safe = lambda v: '"' + str(v).replace('"', '""') + '"'
+        rows.append(",".join([
+            str(idx),
+            safe(job.title),
+            safe(job.company),
+            safe(job.location),
+            safe(job.source),
+            f"{score * 100:.2f}",
+            safe(job.url),
+        ]))
+    return "\n".join(rows)
+
 def main() -> None:
     st.set_page_config(page_title="CV Job Vacancy Bot", page_icon="🤖")
     st.title("🤖 CV Job Vacancy Bot")
@@ -190,6 +206,14 @@ def main() -> None:
 
         st.subheader(f"Top {len(ranked)} matching vacancies")
         st.caption(f"Job source: {source_note}")
+
+        csv_content = jobs_to_csv(ranked)
+        st.download_button(
+            label="Download matches as CSV",
+            data=csv_content,
+            file_name="cv_job_matches.csv",
+            mime="text/csv",
+        )
 
         for i, (job, score) in enumerate(ranked, start=1):
             st.markdown(f"### {i}. {job.title}")
